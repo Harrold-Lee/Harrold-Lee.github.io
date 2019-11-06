@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)d</a>
+      <a class="article-title" href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)</a>
     </h1>
   
 
@@ -99,14 +99,14 @@ GPIO_InitStructure.GPIO_OType=GPIO_OType_PP;//推挽输出
 GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;//上拉
 GPIO_Init(GPIOC,&amp;GPIO_InitStructure); //初始化结构体
 GPIO_ResetBits(GPIOC,GPIO_Pin_3);
-            GPIO_SetBits(GPIOC,GPIO_Pin_2);</code></pre><p>}<br>***要注意在led.h中对这个函数进行声明。<br>（当PC3为低电平时LED灯点亮，PC3为高电平时LED灯熄灭）以下是LED原理图：<br><img src="/assets/tu6.jpg" alt="tu8"></p>
+            GPIO_SetBits(GPIOC,GPIO_Pin_2);</code></pre><p>}<br>要注意在led.h中对这个函数进行声明。<br>（当PC3为低电平时LED灯点亮，PC3为高电平时LED灯熄灭）以下是LED原理图：<br><img src="/assets/tu8.jpg" alt="tu8"></p>
 <p>在main.c中添加main.h 和led.h两个头文件<br>然后main函数对管脚进行使能<br>int main()<br>{<br>    LED_Init();<br>    while(1)<br>    {int i=1000000;<br>        while(i–);<br>         //GPIO_ResetBits(GPIOC,GPIO_Pin_3);//复位C3 点亮D1<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_3);<br>        i=1000000;<br>        while(i–);<br>        // GPIO_ResetBits(GPIOC,GPIO_Pin_2);//复位C2<br>                               //（set是设置为1，reset就是设置为0.）<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_2); // 因为C2设置的是GPIO_SetBits(GPIOC,GPIO_Pin_2)所以会有闪烁效果<br>    }<br>}</p>
-<p>*要注意在main.h添加led.h头文件<br>最后是我完成后的效果：<br><img src="/assets/tu6.jpg" alt="tu7"></p>
+<p>要注意在main.h添加led.h头文件<br>最后是我完成后的效果：<br><img src="/assets/tu7.jpg" alt="tu7"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2mswyw20001fow5wlqzqbmc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2mt3qno00031ow559hz2idc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -145,7 +145,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2mswyvj0000fow5bfs6aedx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2mt3qnk00011ow5wssh2gi3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -182,7 +182,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2mswyw30002fow5q6h6qbgo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2mt3qnq00041ow50zepb0gz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -219,7 +219,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2mswyw50003fow5peuiecgp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2mt3qnn00021ow595e0khrc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -268,7 +268,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2mswyw60004fow552hjp2ts" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2mt3qne00001ow5t46h8pv4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -309,7 +309,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       <ul>
         
           <li>
-            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)d</a>
+            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)</a>
           </li>
         
           <li>

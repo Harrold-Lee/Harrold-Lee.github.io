@@ -5,22 +5,22 @@
   
 
   
-  <title>用库函数来点亮一个LED（STM32F407ZGT6)d | Hexo</title>
+  <title>用库函数来点亮一个LED（STM32F407ZGT6) | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="如何点亮一个LED：根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码： #ifndef _led_H #define _led_H #include “stm32f4xx.h”//添加stm32f4的官方头文件 #endif再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：void">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用库函数来点亮一个LED（STM32F407ZGT6)d">
+<meta property="og:title" content="用库函数来点亮一个LED（STM32F407ZGT6)">
 <meta property="og:url" content="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="如何点亮一个LED：根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码： #ifndef _led_H #define _led_H #include “stm32f4xx.h”//添加stm32f4的官方头文件 #endif再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：void">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://yoursite.com/assets/tu6.jpg">
-<meta property="og:image" content="http://yoursite.com/assets/tu6.jpg">
-<meta property="og:updated_time" content="2019-11-06T04:47:15.591Z">
+<meta property="og:image" content="http://yoursite.com/assets/tu8.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu7.jpg">
+<meta property="og:updated_time" content="2019-11-06T04:52:33.590Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用库函数来点亮一个LED（STM32F407ZGT6)d">
+<meta name="twitter:title" content="用库函数来点亮一个LED（STM32F407ZGT6)">
 <meta name="twitter:description" content="如何点亮一个LED：根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码： #ifndef _led_H #define _led_H #include “stm32f4xx.h”//添加stm32f4的官方头文件 #endif再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：void">
-<meta name="twitter:image" content="http://yoursite.com/assets/tu6.jpg">
+<meta name="twitter:image" content="http://yoursite.com/assets/tu8.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -81,7 +81,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      用库函数来点亮一个LED（STM32F407ZGT6)d
+      用库函数来点亮一个LED（STM32F407ZGT6)
     </h1>
   
 
@@ -104,14 +104,14 @@ GPIO_InitStructure.GPIO_OType=GPIO_OType_PP;//推挽输出
 GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;//上拉
 GPIO_Init(GPIOC,&amp;GPIO_InitStructure); //初始化结构体
 GPIO_ResetBits(GPIOC,GPIO_Pin_3);
-            GPIO_SetBits(GPIOC,GPIO_Pin_2);</code></pre><p>}<br>***要注意在led.h中对这个函数进行声明。<br>（当PC3为低电平时LED灯点亮，PC3为高电平时LED灯熄灭）以下是LED原理图：<br><img src="/assets/tu6.jpg" alt="tu8"></p>
+            GPIO_SetBits(GPIOC,GPIO_Pin_2);</code></pre><p>}<br>要注意在led.h中对这个函数进行声明。<br>（当PC3为低电平时LED灯点亮，PC3为高电平时LED灯熄灭）以下是LED原理图：<br><img src="/assets/tu8.jpg" alt="tu8"></p>
 <p>在main.c中添加main.h 和led.h两个头文件<br>然后main函数对管脚进行使能<br>int main()<br>{<br>    LED_Init();<br>    while(1)<br>    {int i=1000000;<br>        while(i–);<br>         //GPIO_ResetBits(GPIOC,GPIO_Pin_3);//复位C3 点亮D1<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_3);<br>        i=1000000;<br>        while(i–);<br>        // GPIO_ResetBits(GPIOC,GPIO_Pin_2);//复位C2<br>                               //（set是设置为1，reset就是设置为0.）<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_2); // 因为C2设置的是GPIO_SetBits(GPIOC,GPIO_Pin_2)所以会有闪烁效果<br>    }<br>}</p>
-<p>*要注意在main.h添加led.h头文件<br>最后是我完成后的效果：<br><img src="/assets/tu6.jpg" alt="tu7"></p>
+<p>要注意在main.h添加led.h头文件<br>最后是我完成后的效果：<br><img src="/assets/tu7.jpg" alt="tu7"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2mswyw20001fow5wlqzqbmc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2mt3qno00031ow559hz2idc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -160,7 +160,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       <ul>
         
           <li>
-            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)d</a>
+            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)</a>
           </li>
         
           <li>
