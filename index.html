@@ -62,6 +62,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-用库函数来点亮一个LED（STM32F407ZGT6-d" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" class="article-date">
+  <time datetime="2019-11-06T03:25:04.000Z" itemprop="datePublished">2019-11-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)d</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如何点亮一个LED：<br>根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码：</p>
+<p>#ifndef _led_H</p>
+<p>#define _led_H</p>
+<p>#include “stm32f4xx.h”//添加stm32f4的官方头文件</p>
+<p>#endif<br>再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：<br>void LED_Init()<br>{<br>    GPIO_InitTypeDef GPIO_InitStructure; //定义结构体变量</p>
+<pre><code>RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE); //使能端口C时钟
+
+GPIO_InitStructure.GPIO_Mode=GPIO_Mode_OUT; //设置为输出模式
+GPIO_InitStructure.GPIO_Pin=GPIO_Pin_3|GPIO_Pin_2;//管脚设置C3
+          // （因为我用的是核心板，所以我直接用PC3在外部用了一个海绵板，没有使用板子的LED1）
+GPIO_InitStructure.GPIO_Speed=GPIO_Speed_100MHz;//速度为100M
+GPIO_InitStructure.GPIO_OType=GPIO_OType_PP;//推挽输出
+GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;//上拉
+GPIO_Init(GPIOC,&amp;GPIO_InitStructure); //初始化结构体
+GPIO_ResetBits(GPIOC,GPIO_Pin_3);
+            GPIO_SetBits(GPIOC,GPIO_Pin_2);</code></pre><p>}<br>***要注意在led.h中对这个函数进行声明。<br>（当PC3为低电平时LED灯点亮，PC3为高电平时LED灯熄灭）以下是LED原理图：<br><img src="/assets/tu6.jpg" alt="tu8"></p>
+<p>在main.c中添加main.h 和led.h两个头文件<br>然后main函数对管脚进行使能<br>int main()<br>{<br>    LED_Init();<br>    while(1)<br>    {int i=1000000;<br>        while(i–);<br>         //GPIO_ResetBits(GPIOC,GPIO_Pin_3);//复位C3 点亮D1<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_3);<br>        i=1000000;<br>        while(i–);<br>        // GPIO_ResetBits(GPIOC,GPIO_Pin_2);//复位C2<br>                               //（set是设置为1，reset就是设置为0.）<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_2); // 因为C2设置的是GPIO_SetBits(GPIOC,GPIO_Pin_2)所以会有闪烁效果<br>    }<br>}</p>
+<p>*要注意在main.h添加led.h头文件<br>最后是我完成后的效果：<br><img src="/assets/tu6.jpg" alt="tu7"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2mswyw20001fow5wlqzqbmc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-以KEIL5为编译环境的stm32工程的建立" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" class="article-date">
@@ -91,7 +145,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2iowhmi0003xsw5rptcyk4y" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2mswyvj0000fow5bfs6aedx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -128,7 +182,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2iowhmh0002xsw50axj71gz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2mswyw30002fow5q6h6qbgo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -165,7 +219,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2iowhmf0001xsw533s31axa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2mswyw50003fow5peuiecgp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -214,7 +268,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2iowhma0000xsw5v6nj28sf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2mswyw60004fow552hjp2ts" class="article-share-link">Share</a>
       
       
     </footer>
@@ -253,6 +307,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)d</a>
+          </li>
         
           <li>
             <a href="/2019/11/03/以KEIL5为编译环境的stm32工程的建立/">以KEIL5为编译环境的stm32工程的建立</a>

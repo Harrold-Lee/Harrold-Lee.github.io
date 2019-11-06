@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>用库函数来点亮一个LED（STM32F407ZGT6)d | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如何点亮一个LED：根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码： #ifndef _led_H #define _led_H #include “stm32f4xx.h”//添加stm32f4的官方头文件 #endif再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：void">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用库函数来点亮一个LED（STM32F407ZGT6)d">
+<meta property="og:url" content="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="如何点亮一个LED：根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码： #ifndef _led_H #define _led_H #include “stm32f4xx.h”//添加stm32f4的官方头文件 #endif再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：void">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/assets/tu6.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu6.jpg">
+<meta property="og:updated_time" content="2019-11-06T04:47:15.591Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用库函数来点亮一个LED（STM32F407ZGT6)d">
+<meta name="twitter:description" content="如何点亮一个LED：根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码： #ifndef _led_H #define _led_H #include “stm32f4xx.h”//添加stm32f4的官方头文件 #endif再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：void">
+<meta name="twitter:image" content="http://yoursite.com/assets/tu6.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-用库函数来点亮一个LED（STM32F407ZGT6-d" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" class="article-date">
+  <time datetime="2019-11-06T03:25:04.000Z" itemprop="datePublished">2019-11-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      用库函数来点亮一个LED（STM32F407ZGT6)d
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如何点亮一个LED：<br>根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码：</p>
+<p>#ifndef _led_H</p>
+<p>#define _led_H</p>
+<p>#include “stm32f4xx.h”//添加stm32f4的官方头文件</p>
+<p>#endif<br>再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：<br>void LED_Init()<br>{<br>    GPIO_InitTypeDef GPIO_InitStructure; //定义结构体变量</p>
+<pre><code>RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE); //使能端口C时钟
+
+GPIO_InitStructure.GPIO_Mode=GPIO_Mode_OUT; //设置为输出模式
+GPIO_InitStructure.GPIO_Pin=GPIO_Pin_3|GPIO_Pin_2;//管脚设置C3
+          // （因为我用的是核心板，所以我直接用PC3在外部用了一个海绵板，没有使用板子的LED1）
+GPIO_InitStructure.GPIO_Speed=GPIO_Speed_100MHz;//速度为100M
+GPIO_InitStructure.GPIO_OType=GPIO_OType_PP;//推挽输出
+GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;//上拉
+GPIO_Init(GPIOC,&amp;GPIO_InitStructure); //初始化结构体
+GPIO_ResetBits(GPIOC,GPIO_Pin_3);
+            GPIO_SetBits(GPIOC,GPIO_Pin_2);</code></pre><p>}<br>***要注意在led.h中对这个函数进行声明。<br>（当PC3为低电平时LED灯点亮，PC3为高电平时LED灯熄灭）以下是LED原理图：<br><img src="/assets/tu6.jpg" alt="tu8"></p>
+<p>在main.c中添加main.h 和led.h两个头文件<br>然后main函数对管脚进行使能<br>int main()<br>{<br>    LED_Init();<br>    while(1)<br>    {int i=1000000;<br>        while(i–);<br>         //GPIO_ResetBits(GPIOC,GPIO_Pin_3);//复位C3 点亮D1<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_3);<br>        i=1000000;<br>        while(i–);<br>        // GPIO_ResetBits(GPIOC,GPIO_Pin_2);//复位C2<br>                               //（set是设置为1，reset就是设置为0.）<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_2); // 因为C2设置的是GPIO_SetBits(GPIOC,GPIO_Pin_2)所以会有闪烁效果<br>    }<br>}</p>
+<p>*要注意在main.h添加led.h头文件<br>最后是我完成后的效果：<br><img src="/assets/tu6.jpg" alt="tu7"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2mswyw20001fow5wlqzqbmc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">以KEIL5为编译环境的stm32工程的建立</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)d</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/03/以KEIL5为编译环境的stm32工程的建立/">以KEIL5为编译环境的stm32工程的建立</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/25/第二篇/">第二篇</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/25/test-my-site/">test_my_site</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/25/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
