@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>用寄存器点亮一个LED灯 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如何用寄存器点亮一个led灯：使用寄存器创建模板：首先我们在stm32f4xx.h这个文件中来对外设端口（本次我还是用GPIOC3）进行配置：第一步：我们在这个文件中宏定义一下C语言的外设基地址，代码如下： #define PERIPH_BASE      ((unsigned int)0x40000000)、（用到了数据类型的强制转换，避免遇到错误）第二步：分别定义总线基地址，因为GPIO的总线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用寄存器点亮一个LED灯">
+<meta property="og:url" content="http://yoursite.com/2019/11/07/用寄存器点亮一个LED灯/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="如何用寄存器点亮一个led灯：使用寄存器创建模板：首先我们在stm32f4xx.h这个文件中来对外设端口（本次我还是用GPIOC3）进行配置：第一步：我们在这个文件中宏定义一下C语言的外设基地址，代码如下： #define PERIPH_BASE      ((unsigned int)0x40000000)、（用到了数据类型的强制转换，避免遇到错误）第二步：分别定义总线基地址，因为GPIO的总线">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/assets/tu9.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu10.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu11.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu12.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu13.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu14.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu11.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu15.jpg">
+<meta property="og:updated_time" content="2019-11-07T09:45:50.436Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用寄存器点亮一个LED灯">
+<meta name="twitter:description" content="如何用寄存器点亮一个led灯：使用寄存器创建模板：首先我们在stm32f4xx.h这个文件中来对外设端口（本次我还是用GPIOC3）进行配置：第一步：我们在这个文件中宏定义一下C语言的外设基地址，代码如下： #define PERIPH_BASE      ((unsigned int)0x40000000)、（用到了数据类型的强制转换，避免遇到错误）第二步：分别定义总线基地址，因为GPIO的总线">
+<meta name="twitter:image" content="http://yoursite.com/assets/tu9.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-用寄存器点亮一个LED灯" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/07/用寄存器点亮一个LED灯/" class="article-date">
+  <time datetime="2019-11-07T08:25:59.000Z" itemprop="datePublished">2019-11-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      用寄存器点亮一个LED灯
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如何用寄存器点亮一个led灯：<br>使用寄存器创建模板：<br><img src="/assets/tu9.jpg" alt="tu9"><br>首先我们在stm32f4xx.h这个文件中来对外设端口（本次我还是用GPIOC3）<br>进行配置：<br>第一步：我们在这个文件中宏定义一下C语言的外设基地址，代码如下：</p>
+<p>#define PERIPH_BASE      ((unsigned int)0x40000000)、<br>（用到了数据类型的强制转换，避免遇到错误）<br>第二步：分别定义总线基地址，因为GPIO的总线基地址都是挂接在AHB1上，<br>所以我们定义的代码如下：</p>
+<p>#define AHB1PERIPH_BASE  (PERIPH_BASE + 0x00020000)<br>第三步：我们对GPIOC进行配置：<br>首先，对GPIOC的基地址定义，这个基地址我们需要查找stm32f4xx中文参考手册，<br>在中文参考手册的第二章的存储器和总线架构的存储器映射里有所有外设对应的地址和总线。<br>如图：<br><img src="/assets/tu10.jpg" alt="tu10"><br>我们可以看到GPIO的边界地址是0x4002 0800,由前两行代码可知，AHB1PERIPH_BASE是0x4002 0000<br>所以对GPIOC的基地址的定义就可以写成：</p>
+<p>#define GPIOC_BASE       (AHB1PERIPH_BASE + 0x0800)<br>然后我们需要对GPIOC的模式寄存器进行定义，在中文参考手册的GPIO寄存器一节中由对模式寄存器的讲解。<br>如图：<br><img src="/assets/tu11.jpg" alt="tu11"><br>我们可以看到，它的偏移地址是0x00，也就是说模式寄存器的地址就是GPIOC的基地址，下面我们对它进行定义：</p>
+<p>#define GPIOC_MODER      <em>(unsigned int</em>)(GPIOC_BASE+0x00)<br>然后是对置位复位寄存器（GPIOC_BSRR)进行定义，同样看中文参考手册，如图：<br><img src="/assets/tu12.jpg" alt="tu12"><br>我们看到它的偏移地址是0x18，所以代码如下：</p>
+<p>#define GPIOC_BSRR                 <em>(unsigned int</em>)(GPIOC_BASE+0x18)<br>（如果不进行强制类型转换，我们的编译器就会认为它是一个立即数，不是地址）<br>因为STM32要求每次使用外设都必须对相应外设开时钟，所以我们要对时钟外设基地址进行定义，<br>在存储器映射一章有，RCC的偏移地址是0x4002 3800，所以定义如下：</p>
+<p>#define RCC_BASE         (AHB1PERIPH_BASE + 0x3800)<br>然后对AHB1进行开时钟，对查看中文参考手册，在RCC寄存器的外设时钟使能一节，如图：<br><img src="/assets/tu13.jpg" alt="tu13"><br>我们看到，它的偏移地址是0x30，所以它的定义如下：</p>
+<p>#define RCC_AHB1ENR     <em>(unsigned int</em>)(RCC_BASE+0x30)<br>这样我们对stm32f4xx.h就配置完了<br>第四步是写main函数<br>main函数代码如下：<br>int main()<br>{<br>    RCC_AHB1ENR |= 1&lt;&lt;2;<br>    GPIOC_MODER = (1&lt;&lt;(2*3));<br>    while(1)<br>    {<br>      GPIOC_BSRR=(1&lt;&lt;(16+3));<br>      delay(0xFFFFF);<br>      GPIOC_BSRR=(1&lt;&lt;(3));<br>      delay(0xFFFFF);<br>    }<br>}<br>接下来我们对main函数进行分析：<br>首先查看中文参考手册，RCC AHB1外设时钟使能寄存器，即RCC_AHB1ENR，如图：<br><img src="/assets/tu14.jpg" alt="tu14"><br>图中寄存器的第2位对应的是GPIOC，所以我们用1左移两位，进行与运算，从而让第2位置1，使能IO端口C时钟。</p>
+<p>查看参考手册，如图：<br><img src="/assets/tu11.jpg" alt="tu11"><br>将模式寄存器的第6位和第七位置为01，为通用输出模式。（写成(1&lt;&lt;(2*3)的好处是能看到是GPIOC的第几个端口）</p>
+<p>查看参考手册，如图：<br><img src="/assets/tu15.jpg" alt="tu15"><br>将置位复位寄存器的第19位置为1，是为了让PC3复位，点亮LED.<br>然后延时，再熄灭，最后达成闪烁的效果。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/07/用寄存器点亮一个LED灯/" data-id="ck2oj0y590000gkw5mt4pvc9i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">用库函数来点亮一个LED（STM32F407ZGT6)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/07/用寄存器点亮一个LED灯/">用寄存器点亮一个LED灯</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/03/以KEIL5为编译环境的stm32工程的建立/">以KEIL5为编译环境的stm32工程的建立</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/25/第二篇/">第二篇</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/25/test-my-site/">test_my_site</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

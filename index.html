@@ -62,6 +62,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-用寄存器点亮一个LED灯" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/07/用寄存器点亮一个LED灯/" class="article-date">
+  <time datetime="2019-11-07T08:25:59.000Z" itemprop="datePublished">2019-11-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/07/用寄存器点亮一个LED灯/">用寄存器点亮一个LED灯</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如何用寄存器点亮一个led灯：<br>使用寄存器创建模板：<br><img src="/assets/tu9.jpg" alt="tu9"><br>首先我们在stm32f4xx.h这个文件中来对外设端口（本次我还是用GPIOC3）<br>进行配置：<br>第一步：我们在这个文件中宏定义一下C语言的外设基地址，代码如下：</p>
+<p>#define PERIPH_BASE      ((unsigned int)0x40000000)、<br>（用到了数据类型的强制转换，避免遇到错误）<br>第二步：分别定义总线基地址，因为GPIO的总线基地址都是挂接在AHB1上，<br>所以我们定义的代码如下：</p>
+<p>#define AHB1PERIPH_BASE  (PERIPH_BASE + 0x00020000)<br>第三步：我们对GPIOC进行配置：<br>首先，对GPIOC的基地址定义，这个基地址我们需要查找stm32f4xx中文参考手册，<br>在中文参考手册的第二章的存储器和总线架构的存储器映射里有所有外设对应的地址和总线。<br>如图：<br><img src="/assets/tu10.jpg" alt="tu10"><br>我们可以看到GPIO的边界地址是0x4002 0800,由前两行代码可知，AHB1PERIPH_BASE是0x4002 0000<br>所以对GPIOC的基地址的定义就可以写成：</p>
+<p>#define GPIOC_BASE       (AHB1PERIPH_BASE + 0x0800)<br>然后我们需要对GPIOC的模式寄存器进行定义，在中文参考手册的GPIO寄存器一节中由对模式寄存器的讲解。<br>如图：<br><img src="/assets/tu11.jpg" alt="tu11"><br>我们可以看到，它的偏移地址是0x00，也就是说模式寄存器的地址就是GPIOC的基地址，下面我们对它进行定义：</p>
+<p>#define GPIOC_MODER      <em>(unsigned int</em>)(GPIOC_BASE+0x00)<br>然后是对置位复位寄存器（GPIOC_BSRR)进行定义，同样看中文参考手册，如图：<br><img src="/assets/tu12.jpg" alt="tu12"><br>我们看到它的偏移地址是0x18，所以代码如下：</p>
+<p>#define GPIOC_BSRR                 <em>(unsigned int</em>)(GPIOC_BASE+0x18)<br>（如果不进行强制类型转换，我们的编译器就会认为它是一个立即数，不是地址）<br>因为STM32要求每次使用外设都必须对相应外设开时钟，所以我们要对时钟外设基地址进行定义，<br>在存储器映射一章有，RCC的偏移地址是0x4002 3800，所以定义如下：</p>
+<p>#define RCC_BASE         (AHB1PERIPH_BASE + 0x3800)<br>然后对AHB1进行开时钟，对查看中文参考手册，在RCC寄存器的外设时钟使能一节，如图：<br><img src="/assets/tu13.jpg" alt="tu13"><br>我们看到，它的偏移地址是0x30，所以它的定义如下：</p>
+<p>#define RCC_AHB1ENR     <em>(unsigned int</em>)(RCC_BASE+0x30)<br>这样我们对stm32f4xx.h就配置完了<br>第四步是写main函数<br>main函数代码如下：<br>int main()<br>{<br>    RCC_AHB1ENR |= 1&lt;&lt;2;<br>    GPIOC_MODER = (1&lt;&lt;(2*3));<br>    while(1)<br>    {<br>      GPIOC_BSRR=(1&lt;&lt;(16+3));<br>      delay(0xFFFFF);<br>      GPIOC_BSRR=(1&lt;&lt;(3));<br>      delay(0xFFFFF);<br>    }<br>}<br>接下来我们对main函数进行分析：<br>首先查看中文参考手册，RCC AHB1外设时钟使能寄存器，即RCC_AHB1ENR，如图：<br><img src="/assets/tu14.jpg" alt="tu14"><br>图中寄存器的第2位对应的是GPIOC，所以我们用1左移两位，进行与运算，从而让第2位置1，使能IO端口C时钟。</p>
+<p>查看参考手册，如图：<br><img src="/assets/tu11.jpg" alt="tu11"><br>将模式寄存器的第6位和第七位置为01，为通用输出模式。（写成(1&lt;&lt;(2*3)的好处是能看到是GPIOC的第几个端口）</p>
+<p>查看参考手册，如图：<br><img src="/assets/tu15.jpg" alt="tu15"><br>将置位复位寄存器的第19位置为1，是为了让PC3复位，点亮LED.<br>然后延时，再熄灭，最后达成闪烁的效果。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/07/用寄存器点亮一个LED灯/" data-id="ck2oj0y590000gkw5mt4pvc9i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-用库函数来点亮一个LED（STM32F407ZGT6-d" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" class="article-date">
@@ -87,7 +133,7 @@
         <p>如何点亮一个LED：<br>根据上一次的之后，在API里创建一个led.c文件和一个led.h文件，然后我们在led.h里添加如下代码：</p>
 <p>#ifndef _led_H</p>
 <p>#define _led_H</p>
-<p>#include “stm32f4xx.h”//添加stm32f4的官方头文件</p>
+<p>#include “stm32f4xx.h”<br>//添加stm32f4的官方头文件</p>
 <p>#endif<br>再led.c中，添加#include “led.h”，然后我们需要对LED进行初始化，初始化的函数也在这里：<br>void LED_Init()<br>{<br>    GPIO_InitTypeDef GPIO_InitStructure; //定义结构体变量</p>
 <pre><code>RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE); //使能端口C时钟
 
@@ -100,13 +146,13 @@ GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;//上拉
 GPIO_Init(GPIOC,&amp;GPIO_InitStructure); //初始化结构体
 GPIO_ResetBits(GPIOC,GPIO_Pin_3);
             GPIO_SetBits(GPIOC,GPIO_Pin_2);</code></pre><p>}<br>要注意在led.h中对这个函数进行声明。<br>（当PC3为低电平时LED灯点亮，PC3为高电平时LED灯熄灭）以下是LED原理图：<br><img src="/assets/tu8.jpg" alt="tu8"></p>
-<p>在main.c中添加main.h 和led.h两个头文件<br>然后main函数对管脚进行使能<br>int main()<br>{<br>    LED_Init();<br>    while(1)<br>    {int i=1000000;<br>        while(i–);<br>         //GPIO_ResetBits(GPIOC,GPIO_Pin_3);//复位C3 点亮D1<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_3);<br>        i=1000000;<br>        while(i–);<br>        // GPIO_ResetBits(GPIOC,GPIO_Pin_2);//复位C2<br>                               //（set是设置为1，reset就是设置为0.）<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_2); // 因为C2设置的是GPIO_SetBits(GPIOC,GPIO_Pin_2)所以会有闪烁效果<br>    }<br>}</p>
+<p>在main.c中添加main.h 和led.h两个头文件<br>然后main函数对管脚进行使能<br>int main()<br>{<br>    LED_Init();<br>    while(1)<br>    {int i=1000000;<br>        while(i–);<br>         //GPIO_ResetBits(GPIOC,GPIO_Pin_3);//复位C3 点亮D1<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_3);<br>        i=1000000;<br>        while(i–);<br>        // GPIO_ResetBits(GPIOC,GPIO_Pin_2);//复位C2<br>                               //（set是设置为1，reset就是设置为0.）<br>        GPIO_ToggleBits(GPIOC,GPIO_Pin_2);<br>                              // 因为C2设置的是GPIO_SetBits(GPIOC,GPIO_Pin_2)所以会有闪烁效果<br>    }<br>}</p>
 <p>要注意在main.h添加led.h头文件<br>最后是我完成后的效果：<br><img src="/assets/tu7.jpg" alt="tu7"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2mt3qno00031ow559hz2idc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2oj0y7y0001gkw5jvtegxp5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -145,7 +191,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2mt3qnk00011ow5wssh2gi3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2oj0yb60005gkw51igzk7zm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -182,7 +228,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2mt3qnq00041ow50zepb0gz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2oj0yas0002gkw5ryos3h63" class="article-share-link">Share</a>
       
       
     </footer>
@@ -219,7 +265,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2mt3qnn00021ow595e0khrc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2oj0yaw0003gkw59da7ddtn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -268,7 +314,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2mt3qne00001ow5t46h8pv4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2oj0yb10004gkw5zbri2ey0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -309,6 +355,10 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       <ul>
         
           <li>
+            <a href="/2019/11/07/用寄存器点亮一个LED灯/">用寄存器点亮一个LED灯</a>
+          </li>
+        
+          <li>
             <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)</a>
           </li>
         
@@ -322,10 +372,6 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
         
           <li>
             <a href="/2019/08/25/test-my-site/">test_my_site</a>
-          </li>
-        
-          <li>
-            <a href="/2019/08/25/hello-world/">Hello World</a>
           </li>
         
       </ul>
