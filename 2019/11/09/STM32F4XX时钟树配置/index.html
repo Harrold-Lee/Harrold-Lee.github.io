@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>STM32F4XX系统时钟配置 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="stm32f4系统时钟配置1.时钟树的介绍:数据手册第六章时钟的介绍里有stm32f4的时钟树的图：Stm32有5个时钟源，分别是： LSI（内部的低速时钟），LSE（外部的低速时钟），HSI(内部的高速时钟），HSE(外部的高速时钟），PLL（分为PLL和PLLI2S)。 LSI给独立看门狗和内部的RTC提供时钟；LSE对应两个管脚，用来再外部连接两个晶振。它可以指向RTC(一般使用这个时钟来向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32F4XX系统时钟配置">
+<meta property="og:url" content="http://yoursite.com/2019/11/09/STM32F4XX时钟树配置/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="stm32f4系统时钟配置1.时钟树的介绍:数据手册第六章时钟的介绍里有stm32f4的时钟树的图：Stm32有5个时钟源，分别是： LSI（内部的低速时钟），LSE（外部的低速时钟），HSI(内部的高速时钟），HSE(外部的高速时钟），PLL（分为PLL和PLLI2S)。 LSI给独立看门狗和内部的RTC提供时钟；LSE对应两个管脚，用来再外部连接两个晶振。它可以指向RTC(一般使用这个时钟来向">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/assets/tu16.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu17.jpg">
+<meta property="og:image" content="http://yoursite.com/assets/tu18.jpg">
+<meta property="og:updated_time" content="2019-11-09T09:52:25.878Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="STM32F4XX系统时钟配置">
+<meta name="twitter:description" content="stm32f4系统时钟配置1.时钟树的介绍:数据手册第六章时钟的介绍里有stm32f4的时钟树的图：Stm32有5个时钟源，分别是： LSI（内部的低速时钟），LSE（外部的低速时钟），HSI(内部的高速时钟），HSE(外部的高速时钟），PLL（分为PLL和PLLI2S)。 LSI给独立看门狗和内部的RTC提供时钟；LSE对应两个管脚，用来再外部连接两个晶振。它可以指向RTC(一般使用这个时钟来向">
+<meta name="twitter:image" content="http://yoursite.com/assets/tu16.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-STM32F4XX时钟树配置" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/09/STM32F4XX时钟树配置/" class="article-date">
+  <time datetime="2019-11-09T09:04:46.000Z" itemprop="datePublished">2019-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      STM32F4XX系统时钟配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>stm32f4系统时钟配置<br>1.时钟树的介绍:<br>数据手册第六章时钟的介绍里有stm32f4的时钟树的图：<br><img src="/assets/tu16.jpg" alt="tu16"><br>Stm32有5个时钟源，分别是： LSI（内部的低速时钟），LSE（外部的低速时钟），<br>HSI(内部的高速时钟），HSE(外部的高速时钟），PLL（分为PLL和PLLI2S)。</p>
+<p>LSI给独立看门狗和内部的RTC提供时钟；<br>LSE对应两个管脚，用来再外部连接两个晶振。它可以指向RTC(一般使用这个时钟来向RTC提供时钟），<br>还可以指向MCO1；<br>HSI通过RC振荡器产生，大小为16M，可以给系统时钟提供来源，还可以指向MCO1这个管脚，<br>还可以流向PLL锁相环。<br>HSE一般我们设置为8M,可以流向系统时钟，我们的系统时钟就是为系统时钟提供来源（一般不使用HSI内部时钟，当外部时钟HSE损坏时，系统会自动把HSI作为系统时钟来源），<br>还可以流向PLL，经过分频器。<br>PLL锁相环，作用是倍频输出，系统时钟就是由HSE提供的8M频率，通过PLL来倍频输出达到168M。</p>
+<p>2.系统时钟的来源<br><img src="/assets/tu17.jpg" alt="tu17"><br>图上画出了HSE作为系统时钟的时钟源，从8M为系统时钟提供168M的过程。<br>8M经过M分频，取M=8，此时为1M<br>然后经过N倍频，取N=336，此时为336M<br>然后经过P分频，取P=2,此时为168M提供给系统时钟。<br>这是系统时钟的默认配置方法。</p>
+<p>3.系统时钟的设置<br>实验要做的时将系统时钟为84MHZ，来使延时函数的延时时长变为之前的2倍。<br>我们要再main.c中添加一个void RCC_HSE_Config(u32 pllm,u32 plln,u32 pllp,u32 pllq)<br>这个函数的功能就是设置M,N,P的值来改变系统时钟。代码如下：<br>void RCC_HSE_Config(u32 pllm,u32 plln,u32 pllp,u32 pllq)<br>{<br>   RCC_DeInit();//将外设RCC寄存器重设为缺省值<br>     RCC_HSEConfig(RCC_HSE_ON);//设置外部高速晶振（HSE）<br>     if(RCC_WaitForHSEStartUp()==SUCCESS)<br>     {<br>          RCC_HCLKConfig(RCC_SYSCLK_Div1);//设置AHB时钟，因为AHB的时钟等于系统时钟，所以将系统时钟一分频就是AHB时钟<br>            RCC_PCLK1Config(RCC_HCLK_Div2);//设置低速APB2时钟，设置为84M<br>            RCC_PCLK2Config(RCC_HCLK_Div4);//设置低速APB1时钟，设置为42M<br>            RCC_PLLConfig(RCC_PLLSource_HSE,pllm,plln,pllp,pllq);<br>            RCC_PLLCmd(ENABLE);//控制PLL使能或者失能<br>            while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY)==RESET);<br>            //检查PLLRDY的RCC标志位是否设置，PLL就绪<br>            RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);//设置系统时钟为PLLCLK<br>            while(RCC_GetSYSCLKSource()!=0x08);//返回用作系统时钟的时钟源<br>     }</p>
+<p>}<br>然后再main函数中调用函数，更改参数就能达到目的，RCC_HSE_Config(8,336,4,7);<br>这时就能观察到，延时的时长是之前的两倍。<br><img src="/assets/tu18.jpg" alt="tu18"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/09/STM32F4XX时钟树配置/" data-id="ck2re4m9q0000ycw57mh5zllh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/07/用寄存器点亮一个LED灯/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">用寄存器点亮一个LED灯</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/09/STM32F4XX时钟树配置/">STM32F4XX系统时钟配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/07/用寄存器点亮一个LED灯/">用寄存器点亮一个LED灯</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/">用库函数来点亮一个LED（STM32F407ZGT6)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/03/以KEIL5为编译环境的stm32工程的建立/">以KEIL5为编译环境的stm32工程的建立</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/25/第二篇/">第二篇</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

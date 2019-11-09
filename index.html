@@ -62,6 +62,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-STM32F4XX时钟树配置" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/09/STM32F4XX时钟树配置/" class="article-date">
+  <time datetime="2019-11-09T09:04:46.000Z" itemprop="datePublished">2019-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/09/STM32F4XX时钟树配置/">STM32F4XX系统时钟配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>stm32f4系统时钟配置<br>1.时钟树的介绍:<br>数据手册第六章时钟的介绍里有stm32f4的时钟树的图：<br><img src="/assets/tu16.jpg" alt="tu16"><br>Stm32有5个时钟源，分别是： LSI（内部的低速时钟），LSE（外部的低速时钟），<br>HSI(内部的高速时钟），HSE(外部的高速时钟），PLL（分为PLL和PLLI2S)。</p>
+<p>LSI给独立看门狗和内部的RTC提供时钟；<br>LSE对应两个管脚，用来再外部连接两个晶振。它可以指向RTC(一般使用这个时钟来向RTC提供时钟），<br>还可以指向MCO1；<br>HSI通过RC振荡器产生，大小为16M，可以给系统时钟提供来源，还可以指向MCO1这个管脚，<br>还可以流向PLL锁相环。<br>HSE一般我们设置为8M,可以流向系统时钟，我们的系统时钟就是为系统时钟提供来源（一般不使用HSI内部时钟，当外部时钟HSE损坏时，系统会自动把HSI作为系统时钟来源），<br>还可以流向PLL，经过分频器。<br>PLL锁相环，作用是倍频输出，系统时钟就是由HSE提供的8M频率，通过PLL来倍频输出达到168M。</p>
+<p>2.系统时钟的来源<br><img src="/assets/tu17.jpg" alt="tu17"><br>图上画出了HSE作为系统时钟的时钟源，从8M为系统时钟提供168M的过程。<br>8M经过M分频，取M=8，此时为1M<br>然后经过N倍频，取N=336，此时为336M<br>然后经过P分频，取P=2,此时为168M提供给系统时钟。<br>这是系统时钟的默认配置方法。</p>
+<p>3.系统时钟的设置<br>实验要做的时将系统时钟为84MHZ，来使延时函数的延时时长变为之前的2倍。<br>我们要再main.c中添加一个void RCC_HSE_Config(u32 pllm,u32 plln,u32 pllp,u32 pllq)<br>这个函数的功能就是设置M,N,P的值来改变系统时钟。代码如下：<br>void RCC_HSE_Config(u32 pllm,u32 plln,u32 pllp,u32 pllq)<br>{<br>   RCC_DeInit();//将外设RCC寄存器重设为缺省值<br>     RCC_HSEConfig(RCC_HSE_ON);//设置外部高速晶振（HSE）<br>     if(RCC_WaitForHSEStartUp()==SUCCESS)<br>     {<br>          RCC_HCLKConfig(RCC_SYSCLK_Div1);//设置AHB时钟，因为AHB的时钟等于系统时钟，所以将系统时钟一分频就是AHB时钟<br>            RCC_PCLK1Config(RCC_HCLK_Div2);//设置低速APB2时钟，设置为84M<br>            RCC_PCLK2Config(RCC_HCLK_Div4);//设置低速APB1时钟，设置为42M<br>            RCC_PLLConfig(RCC_PLLSource_HSE,pllm,plln,pllp,pllq);<br>            RCC_PLLCmd(ENABLE);//控制PLL使能或者失能<br>            while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY)==RESET);<br>            //检查PLLRDY的RCC标志位是否设置，PLL就绪<br>            RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);//设置系统时钟为PLLCLK<br>            while(RCC_GetSYSCLKSource()!=0x08);//返回用作系统时钟的时钟源<br>     }</p>
+<p>}<br>然后再main函数中调用函数，更改参数就能达到目的，RCC_HSE_Config(8,336,4,7);<br>这时就能观察到，延时的时长是之前的两倍。<br><img src="/assets/tu18.jpg" alt="tu18"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/09/STM32F4XX时钟树配置/" data-id="ck2re4m9q0000ycw57mh5zllh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-用寄存器点亮一个LED灯" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/07/用寄存器点亮一个LED灯/" class="article-date">
@@ -98,7 +139,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/07/用寄存器点亮一个LED灯/" data-id="ck2oj0y590000gkw5mt4pvc9i" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/07/用寄存器点亮一个LED灯/" data-id="ck2re4mg00005ycw5vz7hl5nq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -152,7 +193,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2oj0y7y0001gkw5jvtegxp5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/06/用库函数来点亮一个LED（STM32F407ZGT6-d/" data-id="ck2re4mfo0003ycw5wuq0irc9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -191,7 +232,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2oj0yb60005gkw51igzk7zm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/03/以KEIL5为编译环境的stm32工程的建立/" data-id="ck2re4mfm0002ycw5jad5ompu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -228,7 +269,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2oj0yas0002gkw5ryos3h63" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/第二篇/" data-id="ck2re4mfy0004ycw5f5c7c6v5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -265,7 +306,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2oj0yaw0003gkw59da7ddtn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/test-my-site/" data-id="ck2re4mas0001ycw5thmcsbhw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -314,7 +355,7 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2oj0yb10004gkw5zbri2ey0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/08/25/hello-world/" data-id="ck2re4mg20006ycw5029naib5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -355,6 +396,10 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
       <ul>
         
           <li>
+            <a href="/2019/11/09/STM32F4XX时钟树配置/">STM32F4XX系统时钟配置</a>
+          </li>
+        
+          <li>
             <a href="/2019/11/07/用寄存器点亮一个LED灯/">用寄存器点亮一个LED灯</a>
           </li>
         
@@ -368,10 +413,6 @@ GPIO_ResetBits(GPIOC,GPIO_Pin_3);
         
           <li>
             <a href="/2019/08/25/第二篇/">第二篇</a>
-          </li>
-        
-          <li>
-            <a href="/2019/08/25/test-my-site/">test_my_site</a>
           </li>
         
       </ul>
